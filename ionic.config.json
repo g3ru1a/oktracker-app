@@ -1,0 +1,7 @@
+{
+  "name": "OkTracker",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "vue"
+}
