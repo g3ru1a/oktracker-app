@@ -8,7 +8,7 @@ const routes: Array<RouteRecordRaw> = [
     redirect: '/user/folder/Inbox'
   },
   {
-    path: '/auth/login',
+    path: '/login',
     component: () => import ('../views/auth/LoginPage.vue')
   },
   {

@@ -1,6 +1,8 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router';
+import axios from "axios";
+import VueAxios from 'vue-axios';
 
 import { IonicVue } from '@ionic/vue';
 
@@ -22,15 +24,32 @@ import '@ionic/vue/css/display.css';
 
 /* Theme variables */
 import './theme/variables.css';
+import { createI18n } from "vue-i18n";
+import messages from './locales';
 
 /* Store */
 import { store, key } from "./store";
 
+axios.defaults.baseURL = "https://dev.oktracker.com/api/v2";
+axios.defaults.headers.common = {
+	'X-Requested-With': 'XMLHttpRequest',
+	'Accept': 'application/json'
+}
+
+const i18n = createI18n({
+	locale: 'en',
+	fallbackLocale: 'en',
+    //opt
+	messages
+});
+
 const app = createApp(App)
-  .use(IonicVue)
-  .use(router)
-  .use(store, key);
-  
+	.use(IonicVue)
+	.use(router)
+	.use(store, key)
+	.use(i18n)
+	.use(VueAxios, axios);
+
 router.isReady().then(() => {
-  app.mount('#app');
+	app.mount('#app');
 });
