@@ -7,6 +7,11 @@
 					<div v-if="error != ''">
 						<ion-item class="text-center text-small" color="danger">{{ error }}</ion-item>
 					</div>
+					<ion-item :class="usernameError != '' ? 'ion-invalid' : ''">
+						<ion-label><ion-icon :icon="personCircleOutline"></ion-icon></ion-label>
+						<ion-input v-model="username" type="text" :placeholder="$t('placeholders.username')" @keydown="preventSpaces()" @change="preventSpaces()"/>
+						<ion-note slot="error">{{ usernameError }}</ion-note>
+					</ion-item>
 					<ion-item :class="emailError != '' ? 'ion-invalid' : ''">
 						<ion-label><ion-icon :icon="mailOutline"></ion-icon></ion-label>
 						<ion-input v-model="email" type="email" :placeholder="$t('placeholders.email_address')" />
@@ -17,12 +22,14 @@
 						<ion-input v-model="password" type="password" :placeholder="$t('placeholders.password')" />
 						<ion-note slot="error">{{ passwordError }}</ion-note>
 					</ion-item>
-					<ion-button v-on:click="login()" expand="block">{{ $t('buttons.login') }}</ion-button>
-					<div class="links">
-						<span class="link-items" @click="()=> $router.push('/forgot-password')">{{$t('messages.forgot_password_link')}}</span>
-					</div>
+					<ion-item :class="passwordConfirmError != '' ? 'ion-invalid' : ''">
+						<ion-label><ion-icon :icon="lockClosedOutline"></ion-icon></ion-label>
+						<ion-input v-model="passwordConfirm" type="password" :placeholder="$t('placeholders.password_confirm')" />
+						<ion-note slot="error">{{ passwordConfirmError }}</ion-note>
+					</ion-item>
+					<ion-button v-on:click="validate()" expand="block">{{ $t('buttons.register') }}</ion-button>
 				</ion-card>
-				<p>{{$t('messages.register_link_1')}} <span class="link-items" @click="()=> $router.push('/register')">{{$t('messages.register_link_2')}}</span></p>
+				<p class="link-items" @click="()=> $router.push('/login')">{{$t('messages.login_link')}}</p>
 			</div>
 		</ion-content>
 	</ion-page>
@@ -31,7 +38,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import { IonPage, IonInput, IonLabel, IonItem, IonButton, IonCard, IonIcon, IonNote, IonContent } from '@ionic/vue'
-import { lockClosedOutline, mailOutline } from 'ionicons/icons'
+import { lockClosedOutline, mailOutline, personCircleOutline } from 'ionicons/icons'
 import { AxiosResponse } from 'axios';
 import { useStore, MUTATIONS, AuthData } from '../../store';
 
@@ -41,6 +48,13 @@ const regex_email =
 
 const validateEmail = (email: string) => {
 	return String(email).toLowerCase().match(regex_email)
+}
+
+// eslint-disable-next-line
+var regex_password = /^(?=.*[0-9])(?=.*[!.@#$%^&*])[a-zA-Z0-9!.@#$%^&*]{6,16}$/;
+
+const validatePassword = (password: string) => {
+	return String(password).match(regex_password);
 }
 
 export default defineComponent({
@@ -59,11 +73,15 @@ export default defineComponent({
 	data() {
 		return {
 			publicPath: process.env.BASE_URL,
+			username: '',
 			email: '',
 			password: '',
+			passwordConfirm: '',
 			error: '',
+			usernameError: '',
 			emailError: '',
-			passwordError: ''
+			passwordError: '',
+			passwordConfirmError: '',
 		}
 	},
 	setup() {
@@ -72,60 +90,82 @@ export default defineComponent({
 		return {
 			lockClosedOutline,
 			mailOutline,
+			personCircleOutline,
 			store
 		}
 	},
 	methods: {
-		login() {
-			this.error = this.emailError = this.passwordError = ''
-			let cancel = false
-			if (this.email == '') {
-				this.emailError = this.$t('errors.empty.email')
-				cancel = true
-			} else if(!validateEmail(this.email)){
+		validate() {
+			this.error = this.usernameError = this.emailError = this.passwordError = this.passwordConfirmError = '';
+
+			let cancel = this.checkBlank();
+
+			if(!validateEmail(this.email)){
 				this.emailError = this.$t('errors.bad_format.email')
 				cancel = true;
 			}
-			
-			if (this.password == '') {
-				this.passwordError = this.$t('errors.empty.password')
-				cancel = true
-			}else if(this.password.length < 8 || this.password.length > 30){
+			if(this.password.length < 8 || this.password.length > 30){
 				this.passwordError = this.$t('errors.bad_format.password_length');
 				cancel = true;
+			}else if(!validatePassword(this.password)){
+				this.passwordError = this.$t('errors.bad_format.password_content');
+				cancel = true;
 			}
-
-			if (cancel) return
+			if(this.password != this.passwordConfirm){
+				this.passwordConfirmError = this.$t('errors.bad_format.password_match');
+				cancel = true;
+			}
+			if (cancel) return;
+			this.register();
+		},
+		register(){
 			this.axios
-				.post('/auth/login', {
+				.post('/auth/register', {
 					email: this.email,
 					password: this.password
 				})
 				.then((response: AxiosResponse) => {
-					this.storeUserData(response);
+					//
 				})
 				.catch((error) => {
 					let error_code: number = error.response.status;
 					this.error = error.response.status;
 
-					if(error_code == 401){
-						this.error = this.$t('errors.bad_credentials');
+					if(error_code == 422){
+						if(error.response.data.errors.email != undefined){
+							this.emailError = this.$t('errors.email_taken');
+						} 
+						if(error.response.data.errors.name != undefined){
+							this.usernameError = this.$t('errors.username_taken');
+						} 
+						if(error.response.data.errors.password != undefined){
+							this.emailError = this.$t('errors.bad_format.password_match');
+						}
 					}
 				});
 		},
-		storeUserData(response: AxiosResponse){
-			console.log(response);
-			let r_data = response.data;
-			let data: AuthData = {
-				id: r_data.user.id,
-				name: r_data.user.name,
-				email: r_data.user.email,
-				profile_picture: r_data.user.profile_photo_url,
-				role_id: r_data.role_id,
-				token: r_data.token
-			};
-			this.store.commit(MUTATIONS.SET_AUTH_DATA, data);
-			this.$router.replace('/');
+		checkBlank(){
+			let cancel = false;
+			if(this.username == ''){
+				this.usernameError = this.$t('errors.empty.username')
+				cancel = true;
+			}
+			if (this.email == '') {
+				this.emailError = this.$t('errors.empty.email')
+				cancel = true;
+			}
+			if (this.password == '') {
+				this.passwordError = this.$t('errors.empty.password')
+				cancel = true;
+			}
+			if (this.passwordConfirm == '') {
+				this.passwordConfirmError = this.$t('errors.empty.password_confirm')
+				cancel = true;
+			}
+			return cancel;
+		},
+		preventSpaces(){
+			this.username = this.username.replace(/ /g, '');
 		}
 	}
 })

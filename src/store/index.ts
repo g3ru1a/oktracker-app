@@ -1,5 +1,6 @@
 import { InjectionKey } from "vue";
 import { createStore, useStore as baseUseStore, Store, MutationTree, ActionTree } from "vuex";
+import createPersistedState from "vuex-persistedstate";
 
 export type AuthData = { id: number, name: string, email: string, profile_picture: string, role_id: number, token: string };
 export type State = { authData: AuthData | null };
@@ -24,7 +25,9 @@ const mutations: MutationTree<State> = {
     }
 }
 
-export const store = createStore<State>({ state, mutations });
+export const store = createStore<State>({ 
+    state, mutations, 
+    plugins: [createPersistedState()] });
 
 export function useStore() {
     return baseUseStore(key);

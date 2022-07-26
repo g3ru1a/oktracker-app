@@ -23,7 +23,8 @@
     "vue-axios": "^3.4.1",
     "vue-i18n": "^9.1.10",
     "vue-router": "^4.0.12",
-    "vuex": "^4.0.2"
+    "vuex": "^4.0.2",
+    "vuex-persistedstate": "^4.1.0"
   },
   "devDependencies": {
     "@capacitor/cli": "3.6.0",

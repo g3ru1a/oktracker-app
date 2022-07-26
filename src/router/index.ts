@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from '@ionic/vue-router';
-import { RouteRecordRaw } from 'vue-router';
+import { RouteRecordRaw, RouterLink } from 'vue-router';
 import UserSideMenu from "@/views/user/SideMenu.vue";
 
 const routes: Array<RouteRecordRaw> = [
@@ -12,14 +12,23 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import ('../views/auth/LoginPage.vue')
   },
   {
+    path: '/register',
+    component: () => import ('../views/auth/RegisterPage.vue')
+  },
+  {
+    path: '/forgot-password',
+    component: () => import ('../views/auth/LoginPage.vue')
+  },
+  {
     path: "/user",
     component: UserSideMenu,
     children: [
       {
         path: 'folder/:id',
-        component: () => import ('../views/user/FolderPage.vue')
+        component: () => import ('../views/user/FolderPage.vue'),
+        meta: {requiresLogin: true}
       }
-    ]
+    ],
   },
   
 ]

@@ -43,6 +43,14 @@ const i18n = createI18n({
 	messages
 });
 
+router.beforeEach((to, from, next) => {
+	if(to.matched.some(record => record.meta.requiresLogin) && store.state.authData == null){
+		next('/login');
+	}else{
+		next();
+	}
+});
+
 const app = createApp(App)
 	.use(IonicVue)
 	.use(router)
