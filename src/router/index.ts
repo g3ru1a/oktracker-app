@@ -16,6 +16,14 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import ('../views/auth/RegisterPage.vue')
   },
   {
+    path: '/verify/:user_id',
+    component: () => import ('../views/auth/ConfirmEmailPage.vue')
+  },
+  {
+    path: '/verified',
+    component: () => import ('../views/auth/EmailConfirmedPage.vue')
+  },
+  {
     path: '/forgot-password',
     component: () => import ('../views/auth/LoginPage.vue')
   },

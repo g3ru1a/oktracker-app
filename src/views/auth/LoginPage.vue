@@ -17,7 +17,7 @@
 						<ion-input v-model="password" type="password" :placeholder="$t('placeholders.password')" />
 						<ion-note slot="error">{{ passwordError }}</ion-note>
 					</ion-item>
-					<ion-button v-on:click="login()" expand="block">{{ $t('buttons.login') }}</ion-button>
+					<ion-button ref="submitButton" v-on:click="login()" expand="block">{{ $t('buttons.login') }}</ion-button>
 					<div class="links">
 						<span class="link-items" @click="()=> $router.push('/forgot-password')">{{$t('messages.forgot_password_link')}}</span>
 					</div>
@@ -77,25 +77,29 @@ export default defineComponent({
 	},
 	methods: {
 		login() {
-			this.error = this.emailError = this.passwordError = ''
-			let cancel = false
+			this.setSubmitState(false);
+			this.error = this.emailError = this.passwordError = '';
+			let cancel = false;
 			if (this.email == '') {
-				this.emailError = this.$t('errors.empty.email')
-				cancel = true
+				this.emailError = this.$t('errors.empty.email');
+				cancel = true;
 			} else if(!validateEmail(this.email)){
-				this.emailError = this.$t('errors.bad_format.email')
+				this.emailError = this.$t('errors.bad_format.email');
 				cancel = true;
 			}
 			
 			if (this.password == '') {
-				this.passwordError = this.$t('errors.empty.password')
-				cancel = true
+				this.passwordError = this.$t('errors.empty.password');
+				cancel = true;
 			}else if(this.password.length < 8 || this.password.length > 30){
 				this.passwordError = this.$t('errors.bad_format.password_length');
 				cancel = true;
 			}
 
-			if (cancel) return
+			if (cancel){
+				this.setSubmitState(true);
+				return;
+			}
 			this.axios
 				.post('/auth/login', {
 					email: this.email,
@@ -106,11 +110,12 @@ export default defineComponent({
 				})
 				.catch((error) => {
 					let error_code: number = error.response.status;
-					this.error = error.response.status;
+					// this.error = error.response.status;
 
 					if(error_code == 401){
 						this.error = this.$t('errors.bad_credentials');
 					}
+					this.setSubmitState(true);
 				});
 		},
 		storeUserData(response: AxiosResponse){
@@ -126,6 +131,16 @@ export default defineComponent({
 			};
 			this.store.commit(MUTATIONS.SET_AUTH_DATA, data);
 			this.$router.replace('/');
+		},
+		setSubmitState(enabled: boolean){
+			let submitButton: any = this.$refs.submitButton;
+			if(enabled){
+				submitButton.$el.disabled = false;
+				submitButton.$el.innerHTML = this.$t('buttons.login');
+			}else{
+				submitButton.$el.disabled = true;
+				submitButton.$el.innerHTML = this.$t('buttons.loading');
+			}
 		}
 	}
 })

@@ -27,7 +27,7 @@
 						<ion-input v-model="passwordConfirm" type="password" :placeholder="$t('placeholders.password_confirm')" />
 						<ion-note slot="error">{{ passwordConfirmError }}</ion-note>
 					</ion-item>
-					<ion-button v-on:click="validate()" expand="block">{{ $t('buttons.register') }}</ion-button>
+					<ion-button ref="submitButton" v-on:click="validate()" expand="block">{{ $t('buttons.register') }}</ion-button>
 				</ion-card>
 				<p class="link-items" @click="()=> $router.push('/login')">{{$t('messages.login_link')}}</p>
 			</div>
@@ -36,7 +36,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { ref, defineComponent } from 'vue'
 import { IonPage, IonInput, IonLabel, IonItem, IonButton, IonCard, IonIcon, IonNote, IonContent } from '@ionic/vue'
 import { lockClosedOutline, mailOutline, personCircleOutline } from 'ionicons/icons'
 import { AxiosResponse } from 'axios';
@@ -94,8 +94,12 @@ export default defineComponent({
 			store
 		}
 	},
+	mounted(){
+		let submitButton: any = this.$refs.submitButton;
+	},
 	methods: {
 		validate() {
+			this.setSubmitState(false);
 			this.error = this.usernameError = this.emailError = this.passwordError = this.passwordConfirmError = '';
 
 			let cancel = this.checkBlank();
@@ -115,21 +119,26 @@ export default defineComponent({
 				this.passwordConfirmError = this.$t('errors.bad_format.password_match');
 				cancel = true;
 			}
-			if (cancel) return;
+			if (cancel) {
+				this.setSubmitState(true);
+				return;
+			}
 			this.register();
 		},
 		register(){
 			this.axios
 				.post('/auth/register', {
 					email: this.email,
-					password: this.password
+					password: this.password,
+					password_confirmation: this.passwordConfirm,
+					name: this.username,
 				})
 				.then((response: AxiosResponse) => {
-					//
+					this.$router.push('/verify/'+response.data.user.id);
 				})
 				.catch((error) => {
 					let error_code: number = error.response.status;
-					this.error = error.response.status;
+					// this.error = error.response.status;
 
 					if(error_code == 422){
 						if(error.response.data.errors.email != undefined){
@@ -142,6 +151,7 @@ export default defineComponent({
 							this.emailError = this.$t('errors.bad_format.password_match');
 						}
 					}
+					this.setSubmitState(true);
 				});
 		},
 		checkBlank(){
@@ -166,6 +176,16 @@ export default defineComponent({
 		},
 		preventSpaces(){
 			this.username = this.username.replace(/ /g, '');
+		},
+		setSubmitState(enabled: boolean){
+			let submitButton: any = this.$refs.submitButton;
+			if(enabled){
+				submitButton.$el.disabled = false;
+				submitButton.$el.innerHTML = this.$t('buttons.register');
+			}else{
+				submitButton.$el.disabled = true;
+				submitButton.$el.innerHTML = this.$t('buttons.loading');
+			}
 		}
 	}
 })
