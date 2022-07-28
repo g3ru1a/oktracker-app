@@ -32,7 +32,7 @@
 import { defineComponent } from 'vue'
 import { IonPage, IonInput, IonLabel, IonItem, IonButton, IonCard, IonIcon, IonNote, IonContent } from '@ionic/vue'
 import { lockClosedOutline, mailOutline } from 'ionicons/icons'
-import { AxiosResponse } from 'axios';
+import { AxiosError, AxiosResponse } from 'axios';
 import { useStore, MUTATIONS, AuthData } from '../../store';
 
 const regex_email =
@@ -118,7 +118,7 @@ export default defineComponent({
 					this.setSubmitState(true);
 				});
 		},
-		storeUserData(response: AxiosResponse){
+		async storeUserData(response: AxiosResponse){
 			console.log(response);
 			let r_data = response.data;
 			let data: AuthData = {
@@ -129,7 +129,7 @@ export default defineComponent({
 				role_id: r_data.role_id,
 				token: r_data.token
 			};
-			this.store.commit(MUTATIONS.SET_AUTH_DATA, data);
+			await this.store.commit(MUTATIONS.SET_AUTH_DATA, data);
 			this.$router.replace('/');
 		},
 		setSubmitState(enabled: boolean){

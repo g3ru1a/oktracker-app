@@ -31,10 +31,7 @@ import messages from './locales';
 import { store, key } from "./store";
 
 axios.defaults.baseURL = "https://dev.oktracker.com/api/v2";
-axios.defaults.headers.common = {
-	'X-Requested-With': 'XMLHttpRequest',
-	'Accept': 'application/json'
-}
+axios.defaults.headers.common['Accept'] = 'application/json';
 
 const i18n = createI18n({
 	locale: 'en',
