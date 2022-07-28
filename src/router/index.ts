@@ -25,7 +25,18 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: '/forgot-password',
-    component: () => import ('../views/auth/LoginPage.vue')
+    component: () => import ('../views/auth/ForgotPasswordPage.vue')
+  },
+  {
+    path: '/reset-password',
+    name: 'reset_password',
+    component: () => import ('../views/auth/ResetPasswordPage.vue'),
+    props: true,
+  },
+  {
+    path: '/reset-password-success',
+    name: 'reset_password_success',
+    component: () => import ('../views/auth/ResetPasswordSuccessPage.vue'),
   },
   {
     path: "/user",

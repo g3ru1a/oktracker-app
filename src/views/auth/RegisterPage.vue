@@ -58,7 +58,7 @@ const validatePassword = (password: string) => {
 }
 
 export default defineComponent({
-	name: 'LoginPage',
+	name: 'RegisterPage',
 	components: {
 		IonPage,
 		IonInput,

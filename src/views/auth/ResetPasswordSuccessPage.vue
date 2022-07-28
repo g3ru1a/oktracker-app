@@ -7,7 +7,7 @@
 					<div class="text-center checkmark">
 						<ion-icon :icon="checkmarkCircleOutline" size="extra-large"></ion-icon>
 					</div>
-					<p class="text-center">{{ $t('messages.email_confirmed') }}</p>
+					<p class="text-center">{{ $t('messages.password_reset') }}</p>
 					<ion-button @click="() => $router.replace('/login')" ref="submitButton" expand="block" disabled>{{countDown}}</ion-button>
 				</ion-card>
 			</div>

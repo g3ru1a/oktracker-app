@@ -12,8 +12,11 @@ const en = {
         verify: 'Verify',
         loading: 'Loading...',
         go_to_login: 'Back to Login',
+        request_password_reset: 'Request Password Reset',
+        reset_password: 'Update Password'
     },
     errors: {
+        something_went_wrong: 'Something went wrong.',
         empty: {
             username: 'Username cannot be blank.',
             email: 'Email address cannot be blank.',
@@ -31,7 +34,8 @@ const en = {
         bad_credentials: 'Email or Password does not match.',
         email_taken: 'This Email address is already registered.',
         username_taken: 'The Username is taken.',
-        wrong_code: 'The code you entered is wrong.'
+        wrong_code: 'The code you entered is wrong.',
+        email_not_found: 'The email entered is not registered.',
     },
     messages: {
         forgot_password_link: 'Forgot Password?',
@@ -40,6 +44,8 @@ const en = {
         login_link: 'Go To Login',
         check_email: 'You have been successfully registered! We sent a code to your email address, please confirm the address by entering the code below.',
         email_confirmed: 'Thank you for confirming your email address! You\'re all set to start tracking your collection. You\'ll be automatically redirected to the login page in 5 seconds, if it seems stuck please use the button below.',
+        password_reset_check_email: 'An email with a verification code has been sent to the email address specified, please check your email and input the code below to reset your password.',
+        password_reset: 'Your password has been reset successfully! You\'re all set to continue tracking your collection. You\'ll be automatically redirected to the login page in 5 seconds, if it seems stuck please use the button below.',
     }
 }
 
