@@ -32,6 +32,12 @@ import { store, key } from "./store";
 
 axios.defaults.baseURL = "https://dev.oktracker.com/api/v2";
 axios.defaults.headers.common['Accept'] = 'application/json';
+axios.interceptors.request.use(config => {
+	if(store.state.authData != null){
+		config.headers!['Authorization'] = `Bearer ${store.state.authData.token}`;
+	}
+	return config;
+}, error => {return Promise.reject(error)});
 
 const i18n = createI18n({
 	locale: 'en',

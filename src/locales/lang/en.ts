@@ -6,6 +6,16 @@ const en = {
         password_confirm: 'Confirm Password',
         verification_code: '0',
     },
+    menu:{
+        home: 'Home',
+        collections: 'Collections',
+        social: 'Social',
+        account: 'Account',
+        vendors: 'Vendors',
+        settings: 'Settings',
+        logout: 'Logout',
+        discord: 'Discord',
+    },
     buttons: {
         login: 'Login',
         register: 'Register',

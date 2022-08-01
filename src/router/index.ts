@@ -5,7 +5,7 @@ import UserSideMenu from "@/views/user/SideMenu.vue";
 const routes: Array<RouteRecordRaw> = [
   {
     path: '',
-    redirect: '/user/folder/Inbox'
+    redirect: '/user/home'
   },
   {
     path: '/login',
@@ -43,8 +43,13 @@ const routes: Array<RouteRecordRaw> = [
     component: UserSideMenu,
     children: [
       {
-        path: 'folder/:id',
-        component: () => import ('../views/user/FolderPage.vue'),
+        path: 'home',
+        component: () => import ('../views/user/HomePage.vue'),
+        meta: {requiresLogin: true}
+      },
+      {
+        path: 'collections',
+        component: () => import ('../views/user/CollectionsPage.vue'),
         meta: {requiresLogin: true}
       }
     ],

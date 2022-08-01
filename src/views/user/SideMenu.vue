@@ -3,26 +3,65 @@
     <ion-split-pane content-id="main-content">
       <ion-menu content-id="main-content" type="overlay">
         <ion-content>
-          <ion-list id="inbox-list">
-            <ion-list-header>OkTracker</ion-list-header>
-            <ion-note>Welcome, John Doe</ion-note>
-  
-            <ion-menu-toggle :auto-hide="false" v-for="(p, i) in appPages" :key="i">
-              <ion-item @click="selectedIndex = i" router-direction="root" :router-link="p.url" lines="none" :detail="false" class="hydrated" :class="{ selected: selectedIndex === i }">
-                <ion-icon slot="start" :ios="p.iosIcon" :md="p.mdIcon"></ion-icon>
-                <ion-label>{{ p.title }}</ion-label>
+          <ion-list id="user-blob">
+            <img class="profile-picture" src="https://dev.oktracker.com/storage/profile/1/profile.jpg" alt="user_profile" />
+            <!-- <img class="profile-picture" :src="store.state.authData?.profile_picture" alt="user_profile" /> -->
+            <ion-list-header style="color: white">{{store.state.authData?.name}}</ion-list-header>
+            <ion-note style="color: lightgray">{{store.state.authData?.email}}</ion-note>
+          </ion-list>
+          <ion-list class="menu-list">
+            <ion-menu-toggle :auto-hide="false">
+              <ion-item @click="selectedIndex = 0" router-direction="root" :router-link="'/user/home'" lines="none" :detail="false" class="hydrated" :class="{ selected: selectedIndex === 0 }">
+                <ion-icon slot="start" :icon="homeOutline"></ion-icon>
+                <ion-label>{{$t('menu.home')}}</ion-label>
+              </ion-item>
+              <ion-item @click="selectedIndex = 1" router-direction="root" :router-link="'/user/collections'" lines="none" :detail="false" class="hydrated" :class="{ selected: selectedIndex === 1 }">
+                <ion-icon slot="start" :icon="cubeOutline"></ion-icon>
+                <ion-label>{{$t('menu.collections')}}</ion-label>
               </ion-item>
             </ion-menu-toggle>
           </ion-list>
-  
-          <ion-list id="labels-list">
-            <ion-list-header>Labels</ion-list-header>
-  
-            <ion-item v-for="(label, index) in labels" lines="none" :key="index">
-              <ion-icon slot="start" :ios="bookmarkOutline" :md="bookmarkSharp"></ion-icon>
-              <ion-label>{{ label }}</ion-label>
-            </ion-item>
+          <ion-list class="menu-list">
+            <ion-menu-toggle :auto-hide="false">
+              <ion-item @click="selectedIndex = 2" router-direction="root" :router-link="'/user/social'" lines="none" :detail="false" class="hydrated" :class="{ selected: selectedIndex === 2 }">
+                <ion-icon slot="start" :icon="cafeOutline"></ion-icon>
+                <ion-label>{{$t('menu.social')}}</ion-label>
+              </ion-item>
+              <ion-item @click="selectedIndex = 3" router-direction="root" :router-link="'/user/account'" lines="none" :detail="false" class="hydrated" :class="{ selected: selectedIndex === 3 }">
+                <ion-icon slot="start" :icon="personCircleOutline"></ion-icon>
+                <ion-label>{{$t('menu.account')}}</ion-label>
+              </ion-item>
+            </ion-menu-toggle>
           </ion-list>
+          <ion-list class="menu-list">
+            <ion-menu-toggle :auto-hide="false">
+              <ion-item @click="selectedIndex = 4" router-direction="root" :router-link="'/user/vendors'" lines="none" :detail="false" class="hydrated" :class="{ selected: selectedIndex === 4 }">
+                <ion-icon slot="start" :icon="bagHandleOutline"></ion-icon>
+                <ion-label>{{$t('menu.vendors')}}</ion-label>
+              </ion-item>
+              <ion-item @click="selectedIndex = 5" router-direction="root" :router-link="'/user/settings'" lines="none" :detail="false" class="hydrated" :class="{ selected: selectedIndex === 5 }">
+                <ion-icon slot="start" :icon="settingsOutline"></ion-icon>
+                <ion-label>{{$t('menu.settings')}}</ion-label>
+              </ion-item>
+            </ion-menu-toggle>
+          </ion-list>
+          <ion-list class="menu-list">
+            <ion-menu-toggle :auto-hide="false">
+              <ion-item router-direction="root" :router-link="'/auth/logout'" lines="none" :detail="false" class="hydrated">
+                <ion-icon slot="start" :icon="logOutOutline"></ion-icon>
+                <ion-label>{{$t('menu.logout')}}</ion-label>
+              </ion-item>
+            </ion-menu-toggle>
+          </ion-list>
+          <ion-list class="menu-list">
+            <ion-menu-toggle :auto-hide="false">
+              <ion-item router-direction="root" :router-link="'/discord'" lines="none" :detail="false" class="hydrated">
+                <ion-icon slot="start" :icon="logoDiscord"></ion-icon>
+                <ion-label>{{$t('menu.discord')}}</ion-label>
+              </ion-item>
+            </ion-menu-toggle>
+          </ion-list>
+          
         </ion-content>
       </ion-menu>
       <ion-router-outlet id="main-content"></ion-router-outlet>
@@ -34,7 +73,8 @@
 import { IonApp, IonContent, IonIcon, IonItem, IonLabel, IonList, IonListHeader, IonMenu, IonMenuToggle, IonNote, IonRouterOutlet, IonSplitPane } from '@ionic/vue';
 import { defineComponent, ref } from 'vue';
 import { useRoute } from 'vue-router';
-import { archiveOutline, archiveSharp, bookmarkOutline, bookmarkSharp, heartOutline, heartSharp, mailOutline, mailSharp, paperPlaneOutline, paperPlaneSharp, trashOutline, trashSharp, warningOutline, warningSharp } from 'ionicons/icons';
+import { homeOutline, cubeOutline, cafeOutline, personCircleOutline, settingsOutline, bagHandleOutline, logOutOutline, logoDiscord } from 'ionicons/icons';
+import { store } from '@/store';
 
 export default defineComponent({
   name: 'App',
@@ -54,78 +94,27 @@ export default defineComponent({
   },
   setup() {
     const selectedIndex = ref(0);
-    const appPages = [
-      {
-        title: 'Inbox',
-        url: '/user/folder/Inbox',
-        iosIcon: mailOutline,
-        mdIcon: mailSharp
-      },
-      {
-        title: 'Outbox',
-        url: '/user/folder/Outbox',
-        iosIcon: paperPlaneOutline,
-        mdIcon: paperPlaneSharp
-      },
-      {
-        title: 'Favorites',
-        url: '/user/folder/Favorites',
-        iosIcon: heartOutline,
-        mdIcon: heartSharp
-      },
-      {
-        title: 'Archived',
-        url: '/user/folder/Archived',
-        iosIcon: archiveOutline,
-        mdIcon: archiveSharp
-      },
-      {
-        title: 'Trash',
-        url: '/user/folder/Trash',
-        iosIcon: trashOutline,
-        mdIcon: trashSharp
-      },
-      {
-        title: 'Spam',
-        url: '/user/folder/Spam',
-        iosIcon: warningOutline,
-        mdIcon: warningSharp
-      }
-    ];
-    const labels = ['Family', 'Friends', 'Notes', 'Work', 'Travel', 'Reminders'];
-    
-    const path = window.location.pathname.split('/user/folder/')[1];
-    if (path !== undefined) {
-      selectedIndex.value = appPages.findIndex(page => page.title.toLowerCase() === path.toLowerCase());
-    }
-    
-    const route = useRoute();
     
     return { 
       selectedIndex,
-      appPages, 
-      labels,
-      archiveOutline, 
-      archiveSharp, 
-      bookmarkOutline, 
-      bookmarkSharp, 
-      heartOutline, 
-      heartSharp, 
-      mailOutline, 
-      mailSharp, 
-      paperPlaneOutline, 
-      paperPlaneSharp, 
-      trashOutline, 
-      trashSharp, 
-      warningOutline, 
-      warningSharp,
-      isSelected: (url: string) => url === route.path ? 'selected' : ''
+      homeOutline,
+      cubeOutline,
+      cafeOutline, personCircleOutline, settingsOutline, bagHandleOutline, logOutOutline, logoDiscord,
+      store
     }
   }
 });
 </script>
 
 <style scoped>
+.profile-picture {
+  border-radius: 100rem;
+  max-width: 5rem;
+  max-height: 5rem;
+  min-width: 5rem;
+  min-height: 5rem;
+  object-fit: cover;
+}
 ion-menu ion-content {
   --background: var(--ion-item-background, var(--ion-background-color, #fff));
 }
@@ -141,23 +130,27 @@ ion-menu.md ion-list {
   padding: 20px 0;
 }
 
-ion-menu.md ion-note {
-  margin-bottom: 30px;
-}
-
 ion-menu.md ion-list-header,
 ion-menu.md ion-note {
   padding-left: 10px;
 }
 
-ion-menu.md ion-list#inbox-list {
-  border-bottom: 1px solid var(--ion-color-step-150, #d7d8da);
+ion-menu.md ion-list.menu-list {
+  border-top: 1px solid var(--ion-color-step-150, #d7d8da);
 }
 
-ion-menu.md ion-list#inbox-list ion-list-header {
+ion-list#user-blob{
+  background-color: var(--ion-color-primary-tint); /* For browsers that do not support gradients */
+  background-image: linear-gradient(to bottom right, var(--ion-color-primary), var(--ion-color-primary-shade));
+  padding-left: 2rem;
+  margin-left: -1rem;
+  margin-right: -1rem;
+  margin-top: -2rem;
+  padding-top: 2rem;
+}
+ion-menu.md ion-list#user-blob ion-list-header {
   font-size: 22px;
   font-weight: 600;
-
   min-height: 20px;
 }
 
