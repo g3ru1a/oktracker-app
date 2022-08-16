@@ -15,6 +15,7 @@ const en = {
         settings: 'Settings',
         logout: 'Logout',
         discord: 'Discord',
+        theme: 'Dark Theme',
     },
     buttons: {
         login: 'Login',
@@ -23,7 +24,10 @@ const en = {
         loading: 'Loading...',
         go_to_login: 'Back to Login',
         request_password_reset: 'Request Password Reset',
-        reset_password: 'Update Password'
+        reset_password: 'Update Password',
+        edit: 'Edit',
+        delete: 'Delete',
+        share: 'Share',
     },
     errors: {
         something_went_wrong: 'Something went wrong.',

@@ -65,6 +65,7 @@ export default defineComponent({
 </script>
 
 <style>
+
 .logo {
 	max-width: 7rem;
 	margin-bottom: 1rem;
@@ -90,9 +91,7 @@ export default defineComponent({
 	justify-content: center;
 }
 
-@media (prefers-color-scheme: dark) {
-	.logo {
-		filter: brightness(0) invert(1);
-	}
+body.dark .logo {
+	filter: brightness(0) invert(1);
 }
 </style>

@@ -163,6 +163,9 @@ export default defineComponent({
 </script>
 
 <style>
+
+
+
 .code-box {
 	padding: 0.5rem;
 }
@@ -190,13 +193,10 @@ export default defineComponent({
 	justify-content: center;
 }
 
-@media (prefers-color-scheme: dark) {
-	.logo {
-		filter: brightness(0) invert(1);
-	}
-
-    .code-field {
-        background-color: var(--ion-color-step-200);
-    }
+body.dark .logo {
+	filter: brightness(0) invert(1);
+}
+body.dark .code-field {
+	background-color: var(--ion-color-step-200);
 }
 </style>

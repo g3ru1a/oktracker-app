@@ -6,18 +6,21 @@
 					<ion-menu-button color="primary"></ion-menu-button>
 				</ion-buttons>
 				<ion-title>{{ $t('menu.collections') }}</ion-title>
-				
+
 				<ion-buttons slot="end">
-					<ion-button color="primary"><ion-icon :icon="addOutline"></ion-icon></ion-button>
+					<ion-button color="primary">
+						<ion-icon :icon="addOutline"></ion-icon>
+					</ion-button>
 				</ion-buttons>
 			</ion-toolbar>
 		</ion-header>
 
 		<ion-content :fullscreen="true">
 			<!-- Content -->
-			<div  v-if="collections.length > 0" class="a">
+			<ion-list class="collections-box" v-if="collections.length > 0">
 				<collection-component-vue v-for="c in collections" :key="c.id" :collection-data="c" />
-			</div>
+				
+			</ion-list>
 		</ion-content>
 	</ion-page>
 </template>
@@ -25,8 +28,9 @@
 <script lang="ts">
 import CollectionComponentVue from '@/components/CollectionComponent.vue';
 import { defineComponent } from 'vue'
-import { IonButtons, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar, IonButton, IonIcon } from '@ionic/vue'
+import { IonButtons, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar, IonButton, IonIcon, IonList } from '@ionic/vue'
 import { addOutline } from 'ionicons/icons';
+
 
 export type CollectionData = {
 	id: number
@@ -49,6 +53,7 @@ export default defineComponent({
 		CollectionComponentVue,
 		IonButton,
 		IonIcon,
+		IonList
 	},
 	data(){
 		return {
@@ -73,4 +78,14 @@ export default defineComponent({
 	}
 })
 </script>
+
+<style scoped>
+
+.collections-box {
+	background: transparent;
+}
+body:not(.dark) ion-content {
+	--ion-background-color: var(--ion-color-light);
+}
+</style>
 

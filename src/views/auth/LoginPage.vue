@@ -147,6 +147,7 @@ export default defineComponent({
 </script>
 
 <style>
+
 .link-items {
 	color: var(--ion-color-primary-tint);
 }
@@ -173,9 +174,7 @@ export default defineComponent({
 	justify-content: center;
 }
 
-@media (prefers-color-scheme: dark) {
-	.logo {
-		filter: brightness(0) invert(1);
-	}
+body.dark .logo {
+	filter: brightness(0) invert(1);
 }
 </style>
