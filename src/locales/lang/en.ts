@@ -5,6 +5,12 @@ const en = {
         password: 'Password',
         password_confirm: 'Confirm Password',
         verification_code: '0',
+        collection: {
+            add: {
+                name: 'My Collection',
+                currency: 'Select Currency'
+            }
+        }
     },
     menu:{
         home: 'Home',
@@ -28,6 +34,23 @@ const en = {
         edit: 'Edit',
         delete: 'Delete',
         share: 'Share',
+        create: 'Create',
+        modify: 'Modify',
+    },
+    labels: {
+        collection: {
+            add: {
+                name: 'Name (Required)',
+                currency: 'Currency (Defaults to USD)'
+            }
+        }
+    },
+    headers: {
+        collections: {
+            index: 'Collections',
+            add: 'Create Collection',
+            edit: 'Modify Collection',
+        }
     },
     errors: {
         something_went_wrong: 'Something went wrong.',
@@ -50,6 +73,11 @@ const en = {
         username_taken: 'The Username is taken.',
         wrong_code: 'The code you entered is wrong.',
         email_not_found: 'The email entered is not registered.',
+        collections: {
+            add: {
+                blank_name: 'Name Cannot be Blank',
+            }
+        }
     },
     messages: {
         forgot_password_link: 'Forgot Password?',

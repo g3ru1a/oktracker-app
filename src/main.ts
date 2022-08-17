@@ -4,6 +4,7 @@ import router from './router';
 import axios from "axios";
 import VueAxios from 'vue-axios';
 
+
 import { IonicVue } from '@ionic/vue';
 
 /* Core CSS required for Ionic components to work properly */

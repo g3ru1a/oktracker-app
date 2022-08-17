@@ -20,16 +20,17 @@
             </ion-card>
         </ion-item>
 
-        <ion-item-options class="slide-option" side="end">
-            <ion-button color="warning" class="slide-button">{{$t('buttons.edit')}}</ion-button>
-            <ion-button color="danger" class="slide-button">{{$t('buttons.delete')}}</ion-button>
+        <ion-item-options class="slide-option" side="end" ref="slide">
+            <ion-button color="warning" class="slide-button" v-on:click="openEdit()">{{$t('buttons.edit')}}</ion-button>
+            <ion-button color="danger" class="slide-button" v-on:click="deleteCollection()">{{$t('buttons.delete')}}
+            </ion-button>
         </ion-item-options>
     </ion-item-sliding>
 </template>
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
-import { CollectionData } from '@/views/user/CollectionsPage.vue';
+import { CollectionData } from '@/views/user/collections/CollectionsPage.vue';
 import { bookOutline, walletOutline } from 'ionicons/icons';
 import { IonCard, IonIcon, IonButton, IonItemSliding, IonItem, IonItemOptions } from '@ionic/vue';
 
@@ -52,6 +53,20 @@ export default defineComponent({
     methods: {
         openCollection(){
             console.log('clicked');
+        },
+        openEdit() {
+            this.$router.push({ name: 'edit_collection', params: { collection_id: this.collectionData.id } });
+            this.$emit('closeSlide');
+        },
+        deleteCollection(){
+            this.axios.delete('/collections/' + this.collectionData.id)
+                .then(response => {
+                    this.$emit('removed', this.collectionData.id);
+                })
+                .catch(error => {
+                    console.log(error);
+                    
+                });
         }
     }
 })

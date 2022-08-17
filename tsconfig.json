@@ -7,8 +7,10 @@
     "importHelpers": true,
     "moduleResolution": "node",
     "skipLibCheck": true,
+    "resolveJsonModule": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
+    "strictFunctionTypes": false,
     "sourceMap": true,
     "baseUrl": ".",
     "types": [
